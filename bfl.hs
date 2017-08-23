@@ -21,7 +21,7 @@ lengths :: [Int]
 lengths = map length $ sort $ group $ traverseDF $ lableWithLevels input
 
 initialMap :: M.HashMap Int Int
-initialMap = M.fromList $ zip [0..] (1 : map (+1) (scanl1 (+) lengths))
+initialMap = M.fromList $ zip [1..] (1 : map (+1) (scanl1 (+) lengths))
 
 lableWithLevels :: T -> T
 lableWithLevels t = labelWithLevels' t 0
@@ -36,8 +36,8 @@ lableBreadthFirst t = extractFirst $ lableBreadthFirst' (t, 0, initialMap)
 lableBreadthFirst' :: (T, Int, M.HashMap Int Int) -> (T, Int, M.HashMap Int Int)
 lableBreadthFirst' (Leaf _, level, m)   = (Leaf index, level, newM)
   where
-    index = M.lookupDefault 0 (level-1) m
-    newM = M.insert (level-1) (index + 1) m
+    index = M.lookupDefault 0 (level) m
+    newM = M.adjust (+1) (level) m
 lableBreadthFirst' (Node l r, level, m) = (Node labelledLeft labelledRight, level, rightM)
   where
     (labelledRight, _, rightM) = lableBreadthFirst' (r, level + 1, leftM)
