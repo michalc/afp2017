@@ -6,12 +6,6 @@ data T = Leaf Int | Node T T deriving(Show, Eq, Ord)
 input :: T
 input = Node (Leaf 99) (Node (Node (Leaf 99) (Leaf 99)) (Leaf 99))
 
-lengths :: [Int]
-lengths = map length $ sort $ group $ traverseDF $ lableWithLevels input
-
-initialMap :: M.HashMap Int Int
-initialMap = M.fromList $ zip [0..] (1 : map (+1) (scanl1 (+) lengths))
-
 desired :: T
 desired = Node (Leaf 1) (Node (Node (Leaf 3) (Leaf 4)) (Leaf 2))
 
@@ -22,6 +16,12 @@ main =    putStrLn ("Input: " ++ (show input))
        >> putStrLn ("Is desired? " ++ show (lableBreadthFirst input == desired))
 
 -------------
+
+lengths :: [Int]
+lengths = map length $ sort $ group $ traverseDF $ lableWithLevels input
+
+initialMap :: M.HashMap Int Int
+initialMap = M.fromList $ zip [0..] (1 : map (+1) (scanl1 (+) lengths))
 
 lableWithLevels :: T -> T
 lableWithLevels t = labelWithLevels' t 0
